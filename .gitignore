@@ -1,0 +1,15 @@
+.env
+*.pyc
+*.pyo
+__pycache__/
+env/
+venv/
+.idea/
+.vscode/
+*.sublime-*
+*.log
+.ipynb_checkpoints
+/build/
+/dist/
+htmlcov/
+.coverage
