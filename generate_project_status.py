@@ -47,7 +47,7 @@ def get_features_with_funding_status(area_path):
         WHERE [System.WorkItemType] = 'Feature'
         AND [System.AreaPath] == '{area_path}'
         AND NOT [System.State] IN ('Removed', 'Closed', 'Completed')
-        AND [Skype.Funding] = 'Funded'
+        AND [Skype.Funding] IN ('Partially Funded', 'Funded')
         """
     )
     
@@ -155,6 +155,15 @@ def reformat_date(date_str):
     # Format the datetime object to the desired format
     return date_obj.strftime("%b %d, %Y")
 
+def check_pattern(string):
+    # Define the regex pattern
+    pattern = r"SPOOL\\CY\d{4}-H[1-2]\\CY\d{4}-Q[1-4]"
+    
+    # Check if the string matches the pattern
+    if re.fullmatch(pattern, string):
+        return True
+    else:
+        return False
 
 def days_until_iteration_path_end(input_string):
     try:
@@ -190,7 +199,7 @@ def track_feature_completion_ratio(work_item):
     days_until_feature_completion = days_until_iteration_path_end(feature_iteration_path)
 
     # No Iteration Path Set
-    if (days_until_feature_completion == -1):
+    if (days_until_feature_completion == -1 and not check_pattern(feature_iteration_path)):
          return grey_fill
     
     child_wiql_query_string = """
